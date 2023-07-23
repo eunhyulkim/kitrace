@@ -30,6 +30,7 @@ const Horse: React.FC<Props> = ({ playersRef, name, isRunning }) => {
     transition: 'right 1s linear',
     right: `calc(${distance}px - ${HORSE_BODY_PIXEL}px)`,
     '--speed': `${speed}s`,
+    zIndex: player?.lane ?? 20,
   }
 
   const initialSpeed = React.useMemo(() => 0.5 + Math.random() * 0.3, [])

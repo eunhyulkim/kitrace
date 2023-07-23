@@ -140,6 +140,8 @@ const Record = styled('div', {
   fontSize: '14px',
   color: '$gray800',
   fontWeight: 600,
+  width: '70px',
+  textAlign: 'center',
 
   [`${Item}:nth-of-type(2) &`]: {
     color: '$gray900',

@@ -25,7 +25,10 @@ export const createPlayer = ({
     if (!player || player.record !== null) return
 
     player.restPixel = restPixel
-    dispatchMoveHorseEvent({ name: player.name, players: playersRef.current })
+    dispatchMoveHorseEvent({
+      name: player.name,
+      players: [...playersRef.current],
+    })
 
     if (restPixel <= -HORSE_BODY_PIXEL) {
       player.record = Date.now() - gameStartedAt

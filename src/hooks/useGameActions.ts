@@ -51,7 +51,8 @@ export const useGameActions = ({ useBroadCast }: useGameActionsProps = {}) => {
     gameId,
     status,
     playersRef,
-    broadMessage: useBroadCast ? broadMessage : undefined,
+    broadMessage:
+      useBroadCast && status === GameStatus.PLAYING ? broadMessage : undefined,
     handleGameStartClick,
     handleGameEndClick,
     handleGameResetClick,

@@ -220,7 +220,6 @@ const Base = styled('div', {
   position: 'relative',
   fontsize: '22vmin',
   cursor: 'pointer',
-  zIndex: 20,
 
   '--outlines:': 'transparent',
   '--delay-gap': 8,
