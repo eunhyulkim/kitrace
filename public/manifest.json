@@ -1,0 +1,25 @@
+{
+  "short_name": "운명의 레이스",
+  "name": "심장이 쫄깃해지는 복불복 경주 한 판",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "kitrace192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "kitrace512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
