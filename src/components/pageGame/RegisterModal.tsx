@@ -40,6 +40,19 @@ const RegisterModal: React.FC<Props> = ({ isOpen, onSubmit }) => {
         const _input = input as HTMLInputElement
         _input.focus()
       }
+    } else if (e.key === 'Backspace') {
+      const input = document.querySelector(`input[name=player-${nth}]`)
+      const previousInput = document.querySelector(
+        `input[name=player-${nth - 1}]`
+      )
+
+      if (input) {
+        const _input = input as HTMLInputElement
+        if (!_input.value && previousInput) {
+          const _previousInput = previousInput as HTMLInputElement
+          _previousInput.focus()
+        }
+      }
     }
   }
 
@@ -114,14 +127,15 @@ const Title = styled('div', {
 })
 
 const SubmitButton = styled('div', {
-  background: 'white',
-  padding: '12px',
-  borderRadius: '8px',
+  background: '#FF6F0F',
+  padding: '10px 0',
+  borderRadius: '6px',
   textAlign: 'center',
   fontWeight: 'bold',
-  fontSize: '16px',
+  fontSize: '14px',
   margin: '8px 0 0',
   cursor: 'pointer',
+  color: 'white',
 })
 
 const Base = styled('div', {

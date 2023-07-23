@@ -9,6 +9,8 @@ type Props = Parameters<typeof AppScreen>[0]
 const CustomAppScreen: React.FC<Props> = (props) => {
   const { pop } = useFlow()
   const { appBar, children, ...restProps } = props
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { title, ...restAppBarProps } = appBar ?? ({} as any)
 
   return (

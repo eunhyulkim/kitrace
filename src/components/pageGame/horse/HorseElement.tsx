@@ -1,32 +1,13 @@
 import React from 'react'
-import { keyframes, styled } from '../../stitches/stitches.config'
-import { sample, random } from 'lodash'
-import { Player } from '../../types/Player'
-import { percent } from '../../utils/number'
-
-type Props = {
-  name?: string
-  lane: number
-  players: Player[]
-  isRunning?: boolean
-  onUpdateRestDistance?: (distance: number) => void
-}
+import { keyframes, styled } from '../../../stitches/stitches.config'
+import { random } from 'lodash'
 
 const COLOR_HORSE = '--color-horse'
 const COLOR_HORSE_BACK = '--color-horse-back'
 const COLOR_HAIR = '--color-hair'
 const COLOR_HOOF = '--color-hoof'
 
-const Horse: React.FC<Props> = ({
-  players,
-  lane,
-  name,
-  isRunning,
-  onUpdateRestDistance,
-}) => {
-  const containerRef = React.useRef<HTMLDivElement>(null)
-  const [speed, setSpeed] = React.useState(0)
-  const [distance, setDistance] = React.useState(0)
+const HorseElement: React.FC = () => {
   const [colors, setColors] = React.useState({
     [COLOR_HORSE]: 'rgba(50, 50, 50, 1)',
     [COLOR_HORSE_BACK]: 'rgba(30, 30, 30, 1)',
@@ -34,18 +15,9 @@ const Horse: React.FC<Props> = ({
     [COLOR_HOOF]: 'rgba(0, 0, 0, 1)',
   })
 
-  const containerStyle = {
-    top: `${200 + lane}px`,
-    transition: 'right 1s linear',
-    right: `calc(100px + ${distance}px)`,
-    '--speed': `${speed}s`,
-  }
-
   const horseStyle = {
     ...colors,
   } as React.CSSProperties
-
-  const initialSpeed = React.useMemo(() => 0.5 + Math.random() * 0.3, [])
 
   React.useEffect(() => {
     const colorA = random(20, 235)
@@ -65,303 +37,184 @@ const Horse: React.FC<Props> = ({
     })
   }, [])
 
-  React.useEffect(() => {
-    let clearId: NodeJS.Timeout | null = null
-    let prevSpeed = initialSpeed
-
-    const callback = () => {
-      const totalH = players.length
-      const currentRank =
-        [...players]
-          .sort((a, b) => a.restDistance - b.restDistance)
-          .findIndex((p) => p.name === name) + 1
-      const isLast = currentRank === totalH
-      const direction = isLast
-        ? 1
-        : percent(Math.floor((100 / (totalH + 1)) * currentRank))
-        ? 1
-        : -1
-      const range = direction > 0 ? 0.8 - prevSpeed : prevSpeed - 0.4
-      const adjustment = range * Math.random()
-      const nextSpeed = Math.min(
-        Math.max(prevSpeed + direction * adjustment, 0.4),
-        0.8
-      )
-
-      prevSpeed = nextSpeed
-      setSpeed(nextSpeed)
-
-      if (clearId) {
-        clearTimeout(clearId)
-      }
-
-      clearId = setTimeout(callback, nextSpeed * 10000)
-    }
-
-    if (isRunning) {
-      clearId = setTimeout(callback, prevSpeed * 10000)
-      setSpeed(prevSpeed)
-    } else {
-      setSpeed(0)
-      if (clearId) {
-        clearTimeout(clearId)
-        clearId = null
-      }
-    }
-
-    return () => {
-      if (clearId) {
-        clearTimeout(clearId)
-      }
-    }
-  }, [isRunning])
-
-  React.useEffect(() => {
-    if (!isRunning) return
-
-    const id = setInterval(() => {
-      const rect = containerRef.current?.getBoundingClientRect()
-      if (rect === undefined || rect.left < -500) return
-
-      const restDistance = rect.left
-      switch (true) {
-        case restDistance < 200: {
-          setDistance((prev) => prev + speed * 100 - 30)
-          break
-        }
-        case restDistance < 400: {
-          setDistance((prev) => prev + speed * 100 - 35)
-          break
-        }
-        case restDistance < 600: {
-          setDistance((prev) => prev + speed * 100 - 40)
-          break
-        }
-        case restDistance < 800: {
-          setDistance((prev) => prev + speed * 100 - 45)
-          break
-        }
-        case restDistance < 1000: {
-          setDistance((prev) => prev + speed * 100 - 50)
-          break
-        }
-        default: {
-          setDistance((prev) => prev + speed * 100 - 55)
-          break
-        }
-      }
-    }, 1000)
-
-    return () => clearInterval(id)
-  }, [speed, isRunning])
-
-  React.useEffect(() => {
-    const rect = containerRef.current?.getBoundingClientRect()
-    if (rect?.left === undefined) return
-    onUpdateRestDistance?.(rect.left)
-  }, [distance])
-
   return (
-    <HorseContainer
-      ref={containerRef}
-      className={!isRunning || speed === 0 ? '' : ' animate'}
-      style={containerStyle}
-    >
-      <Base style={horseStyle}>
-        <WholeBody className="🐴">
-          <FrontRightLeg>
-            <FrontLegShoulder>
-              <FrontLegUpper>
-                <FrontLegKnee>
-                  <FrontLegLower>
-                    <FrontLegAnkle>
-                      <FrontLegFoot>
-                        <FrontLegHoof />
-                      </FrontLegFoot>
-                    </FrontLegAnkle>
-                  </FrontLegLower>
-                </FrontLegKnee>
-              </FrontLegUpper>
-            </FrontLegShoulder>
-          </FrontRightLeg>
+    <Base style={horseStyle}>
+      <WholeBody className="🐴">
+        <FrontRightLeg>
+          <FrontLegShoulder>
+            <FrontLegUpper>
+              <FrontLegKnee>
+                <FrontLegLower>
+                  <FrontLegAnkle>
+                    <FrontLegFoot>
+                      <FrontLegHoof />
+                    </FrontLegFoot>
+                  </FrontLegAnkle>
+                </FrontLegLower>
+              </FrontLegKnee>
+            </FrontLegUpper>
+          </FrontLegShoulder>
+        </FrontRightLeg>
 
-          <BackRightLeg>
-            <BackLegTop>
-              <BackLegThigh>
-                <BackLegLowerLeg>
-                  <BackLegFoot>
-                    <BackLegHoof />
-                  </BackLegFoot>
-                </BackLegLowerLeg>
-              </BackLegThigh>
-            </BackLegTop>
-          </BackRightLeg>
+        <BackRightLeg>
+          <BackLegTop>
+            <BackLegThigh>
+              <BackLegLowerLeg>
+                <BackLegFoot>
+                  <BackLegHoof />
+                </BackLegFoot>
+              </BackLegLowerLeg>
+            </BackLegThigh>
+          </BackLegTop>
+        </BackRightLeg>
 
-          <Tail>
-            <TailNub>
+        <Tail>
+          <TailNub>
+            <TailSection>
               <TailSection>
                 <TailSection>
                   <TailSection>
                     <TailSection>
-                      <TailSection>
-                        <TailLastSection />
-                      </TailSection>
+                      <TailLastSection />
                     </TailSection>
                   </TailSection>
                 </TailSection>
               </TailSection>
-            </TailNub>
-          </Tail>
+            </TailSection>
+          </TailNub>
+        </Tail>
 
-          <Body>
+        <Body>
+          <BodySection>
             <BodySection>
               <BodySection>
                 <BodySection>
-                  <BodySection>
-                    <BodyLastSection />
-                  </BodySection>
+                  <BodyLastSection />
                 </BodySection>
               </BodySection>
             </BodySection>
-            <BodyBackSide />
-          </Body>
+          </BodySection>
+          <BodyBackSide />
+        </Body>
 
-          <Neck>
-            <NeckUnder />
-            <NeckFront />
-            <NeckBase />
-            <NeckTop />
-            <NeckShoulder />
-          </Neck>
+        <Neck>
+          <NeckUnder />
+          <NeckFront />
+          <NeckBase />
+          <NeckTop />
+          <NeckShoulder />
+        </Neck>
 
-          <FrontLeftLeg>
-            <FrontLegShoulder>
-              <FrontLegUpper>
-                <FrontLegKnee>
-                  <FrontLegLower>
-                    <FrontLegAnkle>
-                      <FrontLegFoot>
-                        <FrontLegHoof />
-                      </FrontLegFoot>
-                    </FrontLegAnkle>
-                  </FrontLegLower>
-                </FrontLegKnee>
-              </FrontLegUpper>
-            </FrontLegShoulder>
-          </FrontLeftLeg>
+        <FrontLeftLeg>
+          <FrontLegShoulder>
+            <FrontLegUpper>
+              <FrontLegKnee>
+                <FrontLegLower>
+                  <FrontLegAnkle>
+                    <FrontLegFoot>
+                      <FrontLegHoof />
+                    </FrontLegFoot>
+                  </FrontLegAnkle>
+                </FrontLegLower>
+              </FrontLegKnee>
+            </FrontLegUpper>
+          </FrontLegShoulder>
+        </FrontLeftLeg>
 
-          <BackLeftLeg>
-            <BackLegTop>
-              <BackLegThigh>
-                <BackLegLowerLeg>
-                  <BackLegFoot>
-                    <BackLegHoof />
-                  </BackLegFoot>
-                </BackLegLowerLeg>
-              </BackLegThigh>
-            </BackLegTop>
-          </BackLeftLeg>
+        <BackLeftLeg>
+          <BackLegTop>
+            <BackLegThigh>
+              <BackLegLowerLeg>
+                <BackLegFoot>
+                  <BackLegHoof />
+                </BackLegFoot>
+              </BackLegLowerLeg>
+            </BackLegThigh>
+          </BackLegTop>
+        </BackLeftLeg>
 
-          <Head>
-            <Skull />
-            <Nose />
-            <Face />
-            <Lip />
-            <Jaw />
-            <Chin />
-            <Ear />
-            <Eye />
-          </Head>
-        </WholeBody>
+        <Head>
+          <Skull />
+          <Nose />
+          <Face />
+          <Lip />
+          <Jaw />
+          <Chin />
+          <Ear />
+          <Eye />
+        </Head>
+      </WholeBody>
 
-        <FrontDust>
-          <Particle1 />
-          <Particle2 />
-          <Particle3 />
-          <Particle4 />
-          <Particle5 />
-          <Particle6 />
-          <Particle7 />
-          <Particle8 />
-          <Particle9 />
-          <Particle10 />
-          <Particle11 />
-          <Particle12 />
-          <Particle13 />
-          <Particle14 />
-          <Particle15 />
-          <Particle16 />
-          <Particle17 />
-          <Particle18 />
-          <Particle19 />
-          <Particle20 />
-          <Particle21 />
-          <Particle22 />
-          <Particle23 />
-          <Particle24 />
-          <Particle25 />
-          <Particle26 />
-          <Particle27 />
-          <Particle28 />
-          <Particle29 />
-          <Particle30 />
-        </FrontDust>
+      <FrontDust>
+        <Particle1 />
+        <Particle2 />
+        <Particle3 />
+        <Particle4 />
+        <Particle5 />
+        <Particle6 />
+        <Particle7 />
+        <Particle8 />
+        <Particle9 />
+        <Particle10 />
+        <Particle11 />
+        <Particle12 />
+        <Particle13 />
+        <Particle14 />
+        <Particle15 />
+        <Particle16 />
+        <Particle17 />
+        <Particle18 />
+        <Particle19 />
+        <Particle20 />
+        <Particle21 />
+        <Particle22 />
+        <Particle23 />
+        <Particle24 />
+        <Particle25 />
+        <Particle26 />
+        <Particle27 />
+        <Particle28 />
+        <Particle29 />
+        <Particle30 />
+      </FrontDust>
 
-        <BackDust>
-          <Particle1 />
-          <Particle2 />
-          <Particle3 />
-          <Particle4 />
-          <Particle5 />
-          <Particle6 />
-          <Particle7 />
-          <Particle8 />
-          <Particle9 />
-          <Particle10 />
-          <Particle11 />
-          <Particle12 />
-          <Particle13 />
-          <Particle14 />
-          <Particle15 />
-          <Particle16 />
-          <Particle17 />
-          <Particle18 />
-          <Particle19 />
-          <Particle20 />
-          <Particle21 />
-          <Particle22 />
-          <Particle23 />
-          <Particle24 />
-          <Particle25 />
-          <Particle26 />
-          <Particle27 />
-          <Particle28 />
-          <Particle29 />
-          <Particle30 />
-        </BackDust>
-      </Base>
-      <Name>{`${name}(${
-        players.find((p) => p.name === name)?.restDistance
-      }m)`}</Name>
-    </HorseContainer>
+      <BackDust>
+        <Particle1 />
+        <Particle2 />
+        <Particle3 />
+        <Particle4 />
+        <Particle5 />
+        <Particle6 />
+        <Particle7 />
+        <Particle8 />
+        <Particle9 />
+        <Particle10 />
+        <Particle11 />
+        <Particle12 />
+        <Particle13 />
+        <Particle14 />
+        <Particle15 />
+        <Particle16 />
+        <Particle17 />
+        <Particle18 />
+        <Particle19 />
+        <Particle20 />
+        <Particle21 />
+        <Particle22 />
+        <Particle23 />
+        <Particle24 />
+        <Particle25 />
+        <Particle26 />
+        <Particle27 />
+        <Particle28 />
+        <Particle29 />
+        <Particle30 />
+      </BackDust>
+    </Base>
   )
 }
 
-export default Horse
-
-const HorseContainer = styled('div', {
-  position: 'absolute',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  overflow: 'visible',
-  transition: 'transform 2s linear',
-  opacity: 0,
-
-  '&.animate': {
-    opacity: 1,
-  },
-})
+export default HorseElement
 
 const Base = styled('div', {
   position: 'relative',
@@ -386,20 +239,6 @@ const Base = styled('div', {
   '& *': {
     position: 'relative',
   },
-})
-
-const Name = styled('div', {
-  zIndex: 30,
-  whiteSpace: 'nowrap',
-  fontSize: '16px',
-  fontWeight: 'bold',
-  position: 'absolute',
-  background: 'black',
-  color: 'white',
-  padding: '4px 6px 6px 6px',
-  borderRadius: '4px',
-  top: 45,
-  left: 250,
 })
 
 const WholeBody = styled('div', {

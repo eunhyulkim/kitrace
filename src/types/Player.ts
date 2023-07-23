@@ -2,7 +2,7 @@ export type Player = {
   name: string
   lane: number
   flag: number
-  restDistance: number
+  restPixel: number
   record: number | null
   handleUpdateRestDistance: (value: number) => void
 }

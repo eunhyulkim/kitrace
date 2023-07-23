@@ -21,7 +21,7 @@ const ResultModal: React.FC<Props> = ({ isOpen, players, onRestartClick }) => {
         ? -1
         : b.record !== null
         ? 1
-        : a.restDistance - b.restDistance
+        : a.restPixel - b.restPixel
     }
 
     return a.record - b.record
@@ -37,7 +37,7 @@ const ResultModal: React.FC<Props> = ({ isOpen, players, onRestartClick }) => {
       // a 태그를 이용하여 이미지 데이터를 다운로드
       const link = document.createElement('a')
       link.href = imgData
-      link.download = `운명의_레이스_${format(new Date(), 'MMddhhmm')}.png`
+      link.download = `키트_레이스_${format(new Date(), 'MMddhhmm')}.png`
       link.click()
     })
   }
@@ -54,7 +54,7 @@ const ResultModal: React.FC<Props> = ({ isOpen, players, onRestartClick }) => {
             {results.map((player, idx) => {
               const record =
                 player.record === null
-                  ? `${Math.max(player.restDistance * 5, 0)}m 남음`
+                  ? `${Math.max(player.restPixel * 5, 0)}m 남음`
                   : `${fillZero(
                       Math.floor(player.record / MS.MINUTE),
                       2
@@ -64,72 +64,17 @@ const ResultModal: React.FC<Props> = ({ isOpen, players, onRestartClick }) => {
                     )}:${fillZero(player.record % MS.SECOND, 2)}`
 
               return (
-                <React.Fragment key={idx}>
-                  <Item key={`${player.lane}-1`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-2`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-3`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-4`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-5`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-6`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-7`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-8`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-9`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-10`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-11`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                  <Item key={`${player.lane}-12`}>
-                    <Rank>{idx + 1}</Rank>
-                    <Name>{player.name}</Name>
-                    <Record>{record}</Record>
-                  </Item>
-                </React.Fragment>
+                <Item key={player.lane}>
+                  <Rank>{idx + 1}</Rank>
+                  <Name>{player.name}</Name>
+                  <Record>{record}</Record>
+                </Item>
               )
             })}
           </DownloadArea>
-          <SubmitButton onClick={onRestartClick}>다시하기</SubmitButton>
+          <SubmitButton type="secondary" onClick={onRestartClick}>
+            다시하기
+          </SubmitButton>
           <SubmitButton onClick={handleDownloadClick}>
             결과 다운로드
           </SubmitButton>
@@ -151,15 +96,7 @@ const Item = styled('div', {
   margin: '10px 16px 0',
 
   '&:nth-of-type(2)': {
-    background: '#acbafc',
-  },
-
-  '&:nth-of-type(3)': {
-    background: '#cbd4ff',
-  },
-
-  '&:nth-of-type(4)': {
-    background: '#e0e4fc',
+    color: '#acbafc',
   },
 })
 
@@ -174,10 +111,18 @@ const Title = styled('div', {
 const Rank = styled('div', {
   fontSize: '16px',
   fontWeight: 'bold',
-  color: '$gray800',
+  color: '$gray600',
   textAlign: 'center',
   fontFamily: 'Audiowide',
   width: '20px',
+
+  [`${Item}:nth-of-type(2) &`]: {
+    color: '$gray900',
+  },
+
+  [`${Item}:nth-of-type(3) &`]: {
+    color: '$gray800',
+  },
 })
 
 const Name = styled('div', {
@@ -193,8 +138,13 @@ const Name = styled('div', {
 
 const Record = styled('div', {
   fontSize: '14px',
-  color: '$gray900',
-  fontWeight: 'bold',
+  color: '$gray800',
+  fontWeight: 600,
+
+  [`${Item}:nth-of-type(2) &`]: {
+    color: '$gray900',
+    fontWeight: 'bold',
+  },
 })
 
 const modalStyle = {
@@ -226,16 +176,34 @@ const DownloadArea = styled('div', {
 })
 
 const SubmitButton = styled('div', {
-  background: 'white',
-  padding: '8px 12px',
-  borderRadius: '8px',
+  margin: '8px 16px',
+  padding: '10px 0',
+  minWidth: '120px',
   textAlign: 'center',
   fontWeight: 'bold',
-  fontSize: '16px',
+  fontSize: '14px',
   cursor: 'pointer',
+  borderRadius: '6px',
 
   '&:last-of-type': {
-    margin: '8px 0 16px',
+    margin: '0 0 16px',
+  },
+
+  variants: {
+    type: {
+      text: {
+        background: 'white',
+        color: '$gray800',
+      },
+      secondary: {
+        background: 'rgba(255, 111, 15, 0.14)',
+        color: '#FF6F0F',
+      },
+    },
+  },
+
+  defaultVariants: {
+    type: 'text',
   },
 })
 

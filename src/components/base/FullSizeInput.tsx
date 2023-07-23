@@ -24,6 +24,7 @@ const Input = styled('input', {
   borderRadius: '6px',
   padding: '8px 12px',
   fontSize: '16px',
+  color: '$gray900',
 
   '&:focus': {
     outline: 'none',
