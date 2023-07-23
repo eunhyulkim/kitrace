@@ -125,7 +125,7 @@ const Horse: React.FC<Props> = ({ playersRef, name, isRunning }) => {
       style={containerStyle}
     >
       <HorseElement />
-      <Name>{`${name}(${Math.floor(player?.restPixel ?? 100000)})`}</Name>
+      <Name>{name}</Name>
     </HorseContainer>
   )
 }
