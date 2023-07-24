@@ -59,9 +59,9 @@ export default GroundPage
 
 const BroadcastMessage = styled('div', {
   position: 'absolute',
-  top: 30,
+  top: '12vh',
   left: '50%',
-  fontSize: '24px',
+  fontSize: '2.5vh',
   padding: '8px',
   borderRadius: '2px',
   transform: 'translateX(-50%)',
